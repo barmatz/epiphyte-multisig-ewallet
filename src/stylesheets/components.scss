@@ -1,0 +1,64 @@
+html,
+body {
+    height: 100%;
+}
+
+body {
+    font-size: 14px;
+    background-image: url("../../images/white_sand.png");
+}
+
+.form {
+    width: 50%;
+    margin: 0 auto;
+
+    .actions {
+        text-align: right;
+
+        a {
+            margin-right: 1em;
+            color: #a9a9a9;
+
+            &:hover {
+                color: #000;
+            }
+        }
+    }
+}
+
+.form-control,
+.form-group .input-group .input-group-addon {
+  border-radius: 0;
+  border-width: 0;
+}
+
+.form-group {
+  border-radius: 10px;
+  border: 1px solid #eee;
+  overflow: hidden;
+}
+
+.btn-primary {
+    &,
+    &:hover,
+    &:focus {
+        background-color: #fc0;
+        border-color: shade(#fc0, 20%);
+        color: #000;
+    }
+}
+
+li {
+    .glyphicon {
+        top: 2px;
+    }
+}
+
+a {
+    border-bottom: 1px dotted transparent;
+
+    &:hover {
+        border-bottom-color: inherit;
+        text-decoration: none;
+    }
+}

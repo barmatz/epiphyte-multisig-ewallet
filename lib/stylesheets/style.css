@@ -1,0 +1,176 @@
+/*!
+ * epiphyte-multisig-ewallet
+ * A multi-signature e-wallet for Epiphyte
+ * Version 0.1.0
+ * Compiled Sunday, June 15th, 2014, 1:43:57 PM
+ */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-size: 14px;
+  background-image: url("../../images/white_sand.png");
+}
+
+.form {
+  width: 50%;
+  margin: 0 auto;
+}
+.form .actions {
+  text-align: right;
+}
+.form .actions a {
+  margin-right: 1em;
+  color: #a9a9a9;
+}
+.form .actions a:hover {
+  color: #000;
+}
+
+.form-control,
+.form-group .input-group .input-group-addon {
+  border-radius: 0;
+  border-width: 0;
+}
+
+.form-group {
+  border-radius: 10px;
+  border: 1px solid #eee;
+  overflow: hidden;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:focus {
+  background-color: #fc0;
+  border-color: #cca300;
+  color: #000;
+}
+
+li .glyphicon {
+  top: 2px;
+}
+
+a {
+  border-bottom: 1px dotted transparent;
+}
+a:hover {
+  border-bottom-color: inherit;
+  text-decoration: none;
+}
+
+.header {
+  border-bottom: 1px solid #d3d3d3;
+  position: fixed;
+  width: 100%;
+}
+.header .navbar {
+  margin-bottom: 0;
+}
+.header .navbar {
+  background-color: #f4f4f4;
+}
+.header .navbar {
+  border: 0;
+  font-size: .9em;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+}
+.header .top-nav {
+  background-color: #231f20;
+  min-height: 1em;
+}
+.header .top-nav li {
+  color: #fff;
+  padding: 1em;
+}
+.header .top-nav li a {
+  color: white;
+  padding: 0;
+}
+.header .top-nav li a:visited {
+  color: white;
+}
+.header .top-nav li a:focus {
+  color: white;
+}
+.header .top-nav li a:hover {
+  color: white;
+}
+.header .top-nav li a:active {
+  color: white;
+}
+.header .top-nav li.active {
+  color: #fc0;
+}
+.header .top-nav li.active a {
+  color: #ffcc00;
+}
+.header .top-nav li.active a:visited {
+  color: #ffcc00;
+}
+.header .top-nav li.active a:focus {
+  color: #ffcc00;
+}
+.header .top-nav li.active a:hover {
+  color: #ffcc00;
+}
+.header .top-nav li.active a:active {
+  color: #ffcc00;
+}
+.header .top-nav .dropdown-menu {
+  background-color: #fff;
+  border: 1px solid #e6e6e7;
+}
+.header .top-nav .dropdown-menu a {
+  color: black;
+}
+.header .bottom-nav {
+  min-height: 5em;
+}
+.header .bottom-nav .nav li {
+  border-left: 1px solid #fff;
+  border-right: 1px solid #d3d3d3;
+  font-size: 1.4em;
+  font-weight: lighter;
+  padding: .5em;
+  text-align: center;
+  width: 200px;
+}
+.header .bottom-nav .nav li:hover {
+  background-color: #fff;
+}
+.header .bottom-nav .nav li:first-child {
+  border-left: 0;
+}
+.header .bottom-nav .nav li:last-child {
+  border-right: 0;
+}
+.header .bottom-nav .nav li a {
+  border: 0;
+}
+.header .logo {
+  height: 3em;
+  margin-right: 15px;
+  margin-top: 1em;
+}
+
+.footer {
+  background-color: #231f20;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: .5em;
+  text-align: center;
+}
+.footer .logo {
+  height: 2em;
+}
+
+.content {
+  padding: 10em inherit;
+}

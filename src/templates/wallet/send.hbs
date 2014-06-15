@@ -1,0 +1,22 @@
+<div class="form panel panel-default">
+    <div class="panel-heading">
+        <h2>Send funds</h2>
+    </div>
+    <div class="panel-body">
+        <form role="form" onsubmit="return false;" {{action "submit" on="submit"}}>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">@</span>
+                    <input class="form-control" placeholder="to.."/>
+                </div>
+                <div class="input-group">
+                    <input class="form-control" placeholder="amount.." type="number"/>
+                    <span class="input-group-addon">B⃦</span>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary pull-right" type="submit">Send</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+<nav class="navbar navbar-default" role="navigation">
+    <div class="top-nav container-fluid">
+        {{#if auth}}
+            <ul class="nav navbar-nav navbar-left">
+                <li>{{#link-to "index"}}Hello {{name}}!{{/link-to}}</li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active">Balance: {{formattedBalanceValue}} B⃦</li>
+                <li><a href="#" {{action "refresh"}}>Refresh</a></li>
+                <li>{{#link-to "user.logout"}}Logout{{/link-to}}</li>
+            </ul>
+        {{/if}}
+    </div>
+
+    <div class="bottom-nav container-fluid">
+        {{#link-to "index"}}<img class="logo pull-left" src="../images/logo-cba.png"/>{{/link-to}}
+
+        <ul class="nav navbar-nav">
+            
+            {{#if auth}}
+                <li class="dropdown">
+                    <a data-toggle="dropdown" href="#"><i class="glyphicon glyphicon-plus"></i> Add funds</a>
+                    <ul class="dropdown-menu" role="menu" aria-labeledby="dLabel">
+                        <li>{{#link-to "wallet.buy"}}Buy{{/link-to}}</li>
+                        <li>{{#link-to "wallet.receive"}}Receive{{/link-to}}</li>
+                    </ul>
+                </li>
+                <li>
+                    {{#link-to "wallet.send"}}<i class="glyphicon glyphicon-transfer"></i> Send Funds{{/link-to}}
+                    </li>
+            {{/if}}
+
+          </ul>
+    </div>
+
+</nav>

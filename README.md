@@ -1,4 +1,3 @@
-epiphyte-multisig-ewallet
-=========================
+# epiphyte-multisig-ewallet
 
-A multi-signature e-wallet for Epiphyte
+> A multi-signature e-wallet for Epiphyte

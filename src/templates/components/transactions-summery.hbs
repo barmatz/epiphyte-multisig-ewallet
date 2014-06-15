@@ -1,0 +1,27 @@
+<div class="panel-heading">
+    <h2>Transactions Summery</h2>
+</div>
+<div class="panel-body">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Sender</th>
+                <th>Recipient</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each content}}
+                <tr {{bind-attr classNames="status"}}>
+                    <td>{{id}}</td>
+                    <td>{{date}}</td>
+                    <td>{{amount}}</td>
+                    <td>{{sender}}</td>
+                    <td>{{recipient}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>

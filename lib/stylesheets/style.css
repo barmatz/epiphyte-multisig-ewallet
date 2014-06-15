@@ -2,7 +2,7 @@
  * epiphyte-multisig-ewallet
  * A multi-signature e-wallet for Epiphyte
  * Version 0.1.0
- * Compiled Sunday, June 15th, 2014, 1:43:57 PM
+ * Compiled Sunday, June 15th, 2014, 6:43:39 PM
  */
 
 html,
@@ -13,6 +13,10 @@ body {
 body {
   font-size: 14px;
   background-image: url("../../images/white_sand.png");
+}
+
+.loading:before {
+  content: "loading..";
 }
 
 .form {

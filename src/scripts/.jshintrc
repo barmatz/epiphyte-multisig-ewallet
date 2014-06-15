@@ -68,6 +68,7 @@
     "globals": {
         "Ember": true,
         "App": true,
-        "Fizzback": true
+        "copay": true,
+        "require": true
     }
 }

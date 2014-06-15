@@ -2,7 +2,6 @@
 
 module.exports = function (grunt) {
     var vendorScriptFiles = [
-        'src/scripts/config.js',
         'vendor/jquery/dist/jquery.min.js',
         'vendor/handlebars/handlebars.min.js',
         'vendor/ember/ember.js',
@@ -12,15 +11,15 @@ module.exports = function (grunt) {
         'vendor/bootswatch/lumen/bootstrap.min.css'
     ],
     sourceFiles = [
-        'src/scripts/**/namespaces/**/*.js',
+        'src/scripts/namespaces/**/*.js',
         'src/scripts/app.js',
-        'src/scripts/**/mixins/**/*.js',
-        'src/scripts/**/models/**/*.js',
-        'src/scripts/**/routes/**/*.js',
-        'src/scripts/**/controllers/**/*.js',
-        'src/scripts/**/views/**/*.js',
-        'src/scripts/**/components/**/*.js',
-        'src/scripts/**/helpers/**/*.js'
+        'src/scripts/mixins/**/*.js',
+        'src/scripts/models/**/*.js',
+        'src/scripts/routes/**/*.js',
+        'src/scripts/controllers/**/*.js',
+        'src/scripts/views/**/*.js',
+        'src/scripts/components/**/*.js',
+        'src/scripts/helpers/**/*.js'
     ];
 
     grunt.initConfig({
@@ -126,10 +125,14 @@ module.exports = function (grunt) {
                 }
             },
             scripts: {
-                expand: true,
-                cwd: 'lib/scripts/',
-                src: '**/*.{js,map}',
-                dest: 'dist/scripts/'
+                files: [{
+                    expand: true,
+                    cwd: 'lib/scripts/',
+                    src: '**/*.{js,map}',
+                    dest: 'dist/scripts/'
+                }, {
+                    'lib/copay/': 'src/copay'
+                }]
             },
             stylesheets: {
                 expand: true,

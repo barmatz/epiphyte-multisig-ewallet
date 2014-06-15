@@ -21,5 +21,6 @@
     "grunt-html-compiler": "^0.1.9",
     "grunt-scss-lint": "^0.1.6",
     "grunt-verb": "^0.2.4"
-  }
+  },
+  "dependencies": {}
 }

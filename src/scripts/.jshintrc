@@ -68,7 +68,8 @@
     "globals": {
         "Ember": true,
         "App": true,
+        "CryptoJS": true,
         "copay": true,
-        "require": true
+        "io": true
     }
 }

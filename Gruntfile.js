@@ -5,13 +5,19 @@ module.exports = function (grunt) {
         'vendor/jquery/dist/jquery.min.js',
         'vendor/handlebars/handlebars.min.js',
         'vendor/ember/ember.js',
-        'vendor/bootstrap/dist/js/bootstrap.min.js'
+        'vendor/bootstrap/dist/js/bootstrap.min.js',
+        'vendor/socket.io-client/socket.io.js',
+        'vendor/CryptoJS/build/rollups/aes.js',
+        'vendor/CryptoJS/build/rollups/pbkdf2.js',
+        'vendor/CryptoJS/build/rollups/sha256.js',
+        'lib/copay/bundle.js'
     ],
     vendorStylesheetFiles = [
         'vendor/bootswatch/lumen/bootstrap.min.css'
     ],
     sourceFiles = [
         'src/scripts/namespaces/**/*.js',
+        'src/scripts/models/copay/**/*.js',
         'src/scripts/app.js',
         'src/scripts/mixins/**/*.js',
         'src/scripts/models/**/*.js',
@@ -29,17 +35,17 @@ module.exports = function (grunt) {
                 banner: '/*!\n * <%= pkg.title || pkg.name %>\n * <%= pkg.description%>\n * Version <%= pkg.version%>\n * Compiled <%= grunt.template.today("dddd, mmmm dS, yyyy, h:MM:ss TT") %>\n */\n',
             },
             scripts: {
-                src: '{lib,dist}/**/*.js'
+                src: '{lib/app,dist}/**/*.js'
             },
             stylesheets: {
-                src: '{lib,dist}/**/*.css'
+                src: '{lib/app,dist}/**/*.css'
             }
         },
         clean: {
             dist: 'dist',
             lib: 'lib',
-            libscripts: 'lib/scripts',
-            libstylesheets: 'lib/stylesheets',
+            libscripts: 'lib/app/scripts',
+            libstylesheets: 'lib/app/stylesheets',
             postcompile: {
                 src: 'dist/**/*',
                 filter: function (path) {
@@ -59,7 +65,7 @@ module.exports = function (grunt) {
                 stripBanners: true,
             },
             src: {
-                dest: 'lib/scripts/application.js',
+                dest: 'lib/app/scripts/application.js',
                 src: sourceFiles
             }
         },
@@ -72,7 +78,7 @@ module.exports = function (grunt) {
             },
             src: {
                 files: {
-                    'lib/scripts/ember-templates.js': 'src/templates/**/*.hbs'
+                    'lib/app/scripts/ember-templates.js': 'src/templates/**/*.hbs'
                 }
             }
         },
@@ -82,18 +88,18 @@ module.exports = function (grunt) {
             },
             lib: {
                 expand: true,
-                cwd: 'lib/scripts/',
+                cwd: 'lib/app/scripts/',
                 src: ['**/*.js', '!**/*.min.js'],
-                dest: 'lib/scripts/',
+                dest: 'lib/app/scripts/',
                 ext: '.min.js'
             }
         },
         cssmin: {
             lib: {
                 expand: true,
-                cwd: 'lib/stylesheets/',
+                cwd: 'lib/app/stylesheets/',
                 src: '**/*.css',
-                dest: 'lib/stylesheets/',
+                dest: 'lib/app/stylesheets/',
                 ext: '.min.css'
             }
         },
@@ -127,16 +133,14 @@ module.exports = function (grunt) {
             scripts: {
                 files: [{
                     expand: true,
-                    cwd: 'lib/scripts/',
+                    cwd: 'lib/app/scripts/',
                     src: '**/*.{js,map}',
                     dest: 'dist/scripts/'
-                }, {
-                    'lib/copay/': 'src/copay'
                 }]
             },
             stylesheets: {
                 expand: true,
-                cwd: 'lib/stylesheets/',
+                cwd: 'lib/app/stylesheets/',
                 src: '**/*.css',
                 dest: 'dist/stylesheets/'
             }
@@ -173,18 +177,27 @@ module.exports = function (grunt) {
             readme: {
                 files: ['.verbrc', 'docs/**/*.md'],
                 tasks: 'verb'
+            },
+            copay: {
+                files: 'copay/**/*.js',
+                tasks: 'browserify:copay'
             }
         },
         htmlcompiler: {
             'dist/index.html': {
                 options: {
                     vendors: vendorScriptFiles,
-                    scripts: [
-                        'dist/scripts/ember-templates.js',
-                        'dist/**/*.js',
-                        '!dist/**/*.min.js',
+                    // scripts: [
+                    //     'dist/scripts/ember-templates.js',
+                    //     'dist/**/*.js',
+                    //     '!dist/**/*.min.js',
+                    //     'http://localhost:35729/livereload.js'
+                    // ],
+                    scripts: [].concat(
+                        'lib/app/scripts/ember-templates.js',
+                        sourceFiles,
                         'http://localhost:35729/livereload.js'
-                    ],
+                    ),
                     stylesheets: [].concat('dist/stylesheets/reset.css', vendorStylesheetFiles, ['dist/**/*.css', '!dist/**/*.min.css']),
                     title: '<%= pkg.title || pkg.name %>',
                     meta: [
@@ -210,10 +223,38 @@ module.exports = function (grunt) {
                     }
                 ]
             }
+        },
+        browserify: {
+            copay: {
+                options: {
+                    pack: function (params) {
+                        var file = require.resolve('soop'),
+                        dir = file.substr(0, file.length - String('soop.js').length);
+                        preludePath = dir + 'example/custom_prelude.js';
+
+                        params.raw = true;
+                        params.sourceMapPrefix = '//#';
+                        params.prelude = fs.readFileSync(preludePath, 'utf8');
+                        params.preludePath = preludePath;
+
+                        return browserPack(params);
+                    },
+                    debug: true,
+                    standalone: 'copay',
+                    insertGlobals: true,
+                    alias: [
+                        'test/mocks/FakeStorage:mocks/FakeStorage'
+                    ]
+                },
+                files: {
+                    'lib/copay/bundle.js': 'copay/**/*.js'
+                }
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-banner');
+    grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-compass');
     grunt.loadNpmTasks('grunt-contrib-concat');
@@ -227,7 +268,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-scss-lint');
     grunt.loadNpmTasks('grunt-verb');
 
-    grunt.registerTask('default', ['verb', 'jshint:node', 'clean:dist', 'scripts', 'stylesheets', 'copy', 'htmlcompiler:dist/index.html', 'clean:postcompile']);
+    grunt.registerTask('default', ['verb', 'jshint:node', 'clean:dist', 'clean:lib', 'scripts', 'stylesheets', 'browserify', 'copy', 'htmlcompiler:dist/index.html', 'clean:postcompile']);
     grunt.registerTask('stylesheets', ['scsslint', 'clean:libstylesheets', 'compass', 'cssmin', 'copy:stylesheets', 'usebanner:stylesheets']);
     grunt.registerTask('scripts', ['jshint:src', 'clean:libscripts', 'concat:src', 'ember_handlebars', 'uglify', 'copy:scripts', 'usebanner:scripts']);
     grunt.registerTask('dev', ['compass', 'cssmin', 'concat:src', 'ember_handlebars', 'uglify', 'copy', 'htmlcompiler:dist/index.html']);

@@ -4,11 +4,19 @@
     function submit(id, password, success, fail) {
         try {
             if (id && password) {
-                success();
+                App.passphrase.getBase64Async(password, function (passphrase) {
+                    var wallet = App.wallets.open();
+
+                    if (wallet) {
+                        App.walletFactory.open(id, {passphrase: passphrase});
+                        success();
+                    }
+                });
             } else {
                 fail('Missing id and/or password');
             }
         } catch (error) {
+            console.error(error);
             fail(error.message);
         }
     }
@@ -19,7 +27,7 @@
         balance: 10000,
         loading: false,
         error: null,
-        id: null,
+        totalWallets: Ember.computed.alias('controllers.application.totalWallets'),
         password: null,
         actions: {
             submit: function () {
@@ -30,7 +38,7 @@
                     error: null
                 });
 
-                submit(this.get('id'), this.get('password'), function () {
+                submit(this.get('totalWallets'), this.get('password'), function () {
                     self.setProperties({
                         loading: false,
                         auth: true

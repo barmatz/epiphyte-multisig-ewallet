@@ -197,18 +197,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-        connect: {
-            localhost: {
-                options: {
-                    base: '.',
-                    hostname: 'localhost',
-                    port: 3002,
-                    keepalive: true,
-                    livereload: true,
-                    open: true
-                }
-            }
-        },
         verb: {
             readme: {
                 files: [
@@ -229,7 +217,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-compass');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-jshint');

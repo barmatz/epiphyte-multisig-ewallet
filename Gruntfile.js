@@ -1,5 +1,9 @@
 'use strict';
 
+// var fs = require('fs'),
+// browserPack = require('browser-pack'),
+// remapify = require('remapify');
+
 module.exports = function (grunt) {
     var vendorScriptFiles = [
         'vendor/jquery/dist/jquery.min.js',
@@ -10,7 +14,8 @@ module.exports = function (grunt) {
         'vendor/CryptoJS/build/rollups/aes.js',
         'vendor/CryptoJS/build/rollups/pbkdf2.js',
         'vendor/CryptoJS/build/rollups/sha256.js',
-        'lib/copay/bundle.js'
+        'node_modules/bitcore/browser/bundle.js',
+        'copayBundle.js'
     ],
     vendorStylesheetFiles = [
         'vendor/bootswatch/lumen/bootstrap.min.css'
@@ -226,29 +231,33 @@ module.exports = function (grunt) {
         },
         browserify: {
             copay: {
-                options: {
-                    pack: function (params) {
-                        var file = require.resolve('soop'),
-                        dir = file.substr(0, file.length - String('soop.js').length);
-                        preludePath = dir + 'example/custom_prelude.js';
+            //     options: {
+            //         browserifyOptions: {
+            //             pack: function (params) {
+            //                 var file = require.resolve('soop'),
+            //                 dir = file.substr(0, file.length - String('soop.js').length),
+            //                 preludePath = dir + 'example/custom_prelude.js';
 
-                        params.raw = true;
-                        params.sourceMapPrefix = '//#';
-                        params.prelude = fs.readFileSync(preludePath, 'utf8');
-                        params.preludePath = preludePath;
+            //                 params.raw = true;
+            //                 params.sourceMapPrefix = '//#';
+            //                 params.prelude = fs.readFileSync(preludePath, 'utf8');
+            //                 params.preludePath = preludePath;
 
-                        return browserPack(params);
-                    },
-                    debug: true,
-                    standalone: 'copay',
-                    insertGlobals: true,
-                    alias: [
-                        'test/mocks/FakeStorage:mocks/FakeStorage'
-                    ]
-                },
-                files: {
-                    'lib/copay/bundle.js': 'copay/**/*.js'
-                }
+            //                 return browserPack(params);
+            //             },
+            //             debug: true,
+            //             standalone: 'copay',
+            //             insertGlobals: true
+            //         },
+            //         alias: [
+            //             'bitcore/node_modules/browserify-buffertools/buffertools.js:buffertools'
+            //         ],
+            //         stdout: true,
+            //         stderr: true
+            //     },
+            //     files: {
+            //         'lib/copay/bundle.js': 'copay/**/*.js'
+            //     }
             }
         }
     });

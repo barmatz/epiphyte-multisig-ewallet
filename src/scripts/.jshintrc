@@ -69,7 +69,8 @@
         "Ember": true,
         "App": true,
         "CryptoJS": true,
-        "copay": true,
-        "io": true
+        "Copay": true,
+        "io": true,
+        "require": true
     }
 }

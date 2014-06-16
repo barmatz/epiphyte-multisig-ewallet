@@ -9,7 +9,7 @@ var buffertools = bitcore.buffertools;
 var Builder = bitcore.TransactionBuilder;
 var http = require('http');
 var EventEmitter = imports.EventEmitter || require('events').EventEmitter;
-var copay = copay || require('../../../copay');
+var copay = copay || require('../copay');
 var SecureRandom = bitcore.SecureRandom;
 var Base58Check = bitcore.Base58.base58Check;
 

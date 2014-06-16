@@ -10,10 +10,10 @@ API.prototype._init = function(opts) {
   opts = opts || {};
   self.opts = opts;
 
-  var WalletFactory = require('soop').load('./js/models/core/WalletFactory', {
-    Storage: opts.Storage || require('./test/mocks/FakeStorage'),
-    Network: opts.Network || require('./js/models/network/WebRTC'),
-    Blockchain: opts.Blockchain || require('./js/models/blockchain/Insight')
+  var WalletFactory = require('soop').load('./core/WalletFactory', {
+    Storage: opts.Storage || require('./mocks/FakeStorage'),
+    Network: opts.Network || require('./network/WebRTC'),
+    Blockchain: opts.Blockchain || require('./blockchain/Insight')
   });
 
   this.walletFactory = new WalletFactory(opts);

@@ -1,7 +1,9 @@
-.grunt
-.sass-cache
-dist
-lib
-logs
-node_modules
-vendor
+.grunt/
+.sass-cache/
+dist/
+lib/
+logs/
+node_modules/
+vendor/
+.DS_Store
+npm-debug.log

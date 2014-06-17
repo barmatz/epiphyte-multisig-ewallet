@@ -23,11 +23,7 @@ app.use('/lib', express.static(__dirname + '/../../lib'));
 
 app.use('/src', express.static(__dirname + '/../../src'));
 
-app.use('/copay', express.static(__dirname + '/../../copay'));
-
 app.use('/node_modules', express.static(__dirname + '/../../node_modules'));
-
-app.use('/', express.static(__dirname + '/../..'));
 
 app.use(express.static(__dirname + '/../../dist'));
 

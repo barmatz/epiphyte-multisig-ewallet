@@ -1,9 +1,5 @@
 'use strict';
 
-// var fs = require('fs'),
-// browserPack = require('browser-pack'),
-// remapify = require('remapify');
-
 module.exports = function (grunt) {
     var vendorScriptFiles = [
         'vendor/jquery/dist/jquery.min.js',
@@ -15,7 +11,7 @@ module.exports = function (grunt) {
         'vendor/CryptoJS/build/rollups/pbkdf2.js',
         'vendor/CryptoJS/build/rollups/sha256.js',
         'node_modules/bitcore/browser/bundle.js',
-        'copayBundle.js'
+        'bitpay/copayBundle.js'
     ],
     vendorStylesheetFiles = [
         'vendor/bootswatch/lumen/bootstrap.min.css'
@@ -182,27 +178,37 @@ module.exports = function (grunt) {
             readme: {
                 files: ['.verbrc', 'docs/**/*.md'],
                 tasks: 'verb'
-            },
-            copay: {
-                files: 'copay/**/*.js',
-                tasks: 'browserify:copay'
             }
         },
         htmlcompiler: {
             'dist/index.html': {
                 options: {
                     vendors: vendorScriptFiles,
-                    // scripts: [
-                    //     'dist/scripts/ember-templates.js',
-                    //     'dist/**/*.js',
-                    //     '!dist/**/*.min.js',
-                    //     'http://localhost:35729/livereload.js'
-                    // ],
                     scripts: [].concat(
                         'lib/app/scripts/ember-templates.js',
                         sourceFiles,
                         'http://localhost:35729/livereload.js'
                     ),
+                    stylesheets: [].concat('dist/stylesheets/reset.css', vendorStylesheetFiles, ['dist/**/*.css', '!dist/**/*.min.css']),
+                    title: '<%= pkg.title || pkg.name %>',
+                    meta: [
+                        {
+                            name: 'viewport',
+                            content: 'width=device-width, user-scalable=no'
+                        }
+                    ],
+                    body: '<div id="ember-app"></div>'
+                }
+            },
+            'dist/index.dev.html': {
+                options: {
+                    vendors: vendorScriptFiles,
+                    scripts: [
+                        'dist/scripts/ember-templates.js',
+                        'dist/**/*.js',
+                        '!dist/**/*.min.js',
+                        'http://localhost:35729/livereload.js'
+                    ],
                     stylesheets: [].concat('dist/stylesheets/reset.css', vendorStylesheetFiles, ['dist/**/*.css', '!dist/**/*.min.css']),
                     title: '<%= pkg.title || pkg.name %>',
                     meta: [
@@ -228,42 +234,10 @@ module.exports = function (grunt) {
                     }
                 ]
             }
-        },
-        browserify: {
-            copay: {
-            //     options: {
-            //         browserifyOptions: {
-            //             pack: function (params) {
-            //                 var file = require.resolve('soop'),
-            //                 dir = file.substr(0, file.length - String('soop.js').length),
-            //                 preludePath = dir + 'example/custom_prelude.js';
-
-            //                 params.raw = true;
-            //                 params.sourceMapPrefix = '//#';
-            //                 params.prelude = fs.readFileSync(preludePath, 'utf8');
-            //                 params.preludePath = preludePath;
-
-            //                 return browserPack(params);
-            //             },
-            //             debug: true,
-            //             standalone: 'copay',
-            //             insertGlobals: true
-            //         },
-            //         alias: [
-            //             'bitcore/node_modules/browserify-buffertools/buffertools.js:buffertools'
-            //         ],
-            //         stdout: true,
-            //         stderr: true
-            //     },
-            //     files: {
-            //         'lib/copay/bundle.js': 'copay/**/*.js'
-            //     }
-            }
         }
     });
 
     grunt.loadNpmTasks('grunt-banner');
-    grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-compass');
     grunt.loadNpmTasks('grunt-contrib-concat');
@@ -277,7 +251,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-scss-lint');
     grunt.loadNpmTasks('grunt-verb');
 
-    grunt.registerTask('default', ['verb', 'jshint:node', 'clean:dist', 'clean:lib', 'scripts', 'stylesheets', 'browserify', 'copy', 'htmlcompiler:dist/index.html', 'clean:postcompile']);
+    grunt.registerTask('default', ['verb', 'jshint:node', 'clean:dist', 'clean:lib', 'scripts', 'stylesheets', 'copy', 'htmlcompiler', 'clean:postcompile']);
     grunt.registerTask('stylesheets', ['scsslint', 'clean:libstylesheets', 'compass', 'cssmin', 'copy:stylesheets', 'usebanner:stylesheets']);
     grunt.registerTask('scripts', ['jshint:src', 'clean:libscripts', 'concat:src', 'ember_handlebars', 'uglify', 'copy:scripts', 'usebanner:scripts']);
     grunt.registerTask('dev', ['compass', 'cssmin', 'concat:src', 'ember_handlebars', 'uglify', 'copy', 'htmlcompiler:dist/index.html']);

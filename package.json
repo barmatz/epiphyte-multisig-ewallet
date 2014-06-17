@@ -7,8 +7,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "browser-pack": "^2.0.1",
-    "browserify": "^4.1.10",
     "grunt": "~0.4.4",
     "grunt-banner": "~0.2.2",
     "grunt-browserify": "^2.1.0",
@@ -23,15 +21,10 @@
     "grunt-ember-handlebars": "~0.8.0",
     "grunt-html-compiler": "^0.1.9",
     "grunt-scss-lint": "^0.1.6",
-    "grunt-verb": "^0.2.4",
-    "remapify": "^0.1.6"
+    "grunt-verb": "^0.2.4"
   },
   "dependencies": {
-    "bitcore": "^0.1.24",
-    "buffertools": "^2.1.2",
     "express": "^4.4.3",
-    "morgan": "^1.1.1",
-    "node-cryptojs-aes": "^0.4.0",
-    "soop": "^0.1.5"
+    "morgan": "^1.1.1"
   }
 }

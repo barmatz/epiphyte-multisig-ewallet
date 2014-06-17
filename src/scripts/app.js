@@ -5,8 +5,6 @@ window.App = (function () {
         LOG_TRANSITIONS: true,
         LOG_TRANSITIONS_INTERNAL: true,
         rootElement: '#ember-app',
-        // passphrase: new (require('../js/models/core/Passphrase')),
-        // walletFactory: new (require('./js/models/core/WalletFactory')),
         formatCurrency: function (value) {
             var isNegative = false;
          

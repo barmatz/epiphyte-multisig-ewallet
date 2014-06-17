@@ -4,7 +4,14 @@
     function submit(id, password, success, fail) {
         try {
             if (id && password) {
-                success();
+                App.passphrase.getBase64Async(password, function (passphrase) {
+                    var wallet = App.wallets.open();
+
+                    if (wallet) {
+                        App.walletFactory.open(id, {passphrase: passphrase});
+                        success();
+                    }
+                });
             } else {
                 fail('Missing id and/or password');
             }

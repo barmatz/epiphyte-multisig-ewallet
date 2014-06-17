@@ -5,6 +5,8 @@ window.App = (function () {
         LOG_TRANSITIONS: true,
         LOG_TRANSITIONS_INTERNAL: true,
         rootElement: '#ember-app',
+        passphrase: new Copay.Passphrase(),
+        walletFactory: new Copay.WalletFactory(),
         formatCurrency: function (value) {
             var isNegative = false;
          

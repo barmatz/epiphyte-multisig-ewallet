@@ -23,6 +23,8 @@ app.use('/lib', express.static(__dirname + '/../../lib'));
 
 app.use('/src', express.static(__dirname + '/../../src'));
 
+app.use('/bitpay', express.static(__dirname + '/../../bitpay'));
+
 app.use('/node_modules', express.static(__dirname + '/../../node_modules'));
 
 app.use(express.static(__dirname + '/../../dist'));

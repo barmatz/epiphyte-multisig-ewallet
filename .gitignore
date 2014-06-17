@@ -1,7 +1,7 @@
 .grunt/
+.tmp/
 .sass-cache/
 dist/
-lib/
 logs/
 node_modules/
 vendor/

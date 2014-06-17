@@ -1,56 +1,106 @@
 'use strict';
 
-module.exports = function (grunt) {
-    var vendorScriptFiles = [
-        'vendor/jquery/dist/jquery.min.js',
-        'vendor/handlebars/handlebars.min.js',
-        'vendor/ember/ember.js',
-        'vendor/bootstrap/dist/js/bootstrap.min.js',
-        'vendor/socket.io-client/socket.io.js',
-        'vendor/CryptoJS/build/rollups/aes.js',
-        'vendor/CryptoJS/build/rollups/pbkdf2.js',
-        'vendor/CryptoJS/build/rollups/sha256.js',
-        'node_modules/bitcore/browser/bundle.js',
-        'bitpay/copayBundle.js'
-    ],
-    vendorStylesheetFiles = [
-        'vendor/bootswatch/lumen/bootstrap.min.css'
-    ],
-    sourceFiles = [
-        'src/scripts/namespaces/**/*.js',
-        'src/scripts/models/copay/**/*.js',
-        'src/scripts/app.js',
-        'src/scripts/mixins/**/*.js',
-        'src/scripts/models/**/*.js',
-        'src/scripts/routes/**/*.js',
-        'src/scripts/controllers/**/*.js',
-        'src/scripts/views/**/*.js',
-        'src/scripts/components/**/*.js',
-        'src/scripts/helpers/**/*.js'
-    ];
+var walletScriptFiles = [
+    'src/scripts/wallet.js',
+    'src/scripts/wallet/routes/**/*.js',
+    'src/scripts/wallet/controllers/**/*.js',
+    'src/scripts/views/**/*.js',
+    'src/scripts/wallet/views/**/*.js',
+    'src/scripts/wallet/components/**/*.js',
+    'src/scripts/wallet/helpers/**/*.js'
+],
+watchdogScriptFiles = [
+    'src/scripts/watchdog.js',
+    'src/scripts/views/**/*.js'
+],
+vendorFiles = [
+    'vendor/jquery/dist/jquery.min.js',
+    'vendor/handlebars/handlebars.min.js',
+    'vendor/ember/ember.js',
+    'vendor/bootstrap/dist/js/bootstrap.min.js',
+    'vendor/socket.io-client/socket.io.js',
+    'vendor/CryptoJS/build/rollups/aes.js',
+    'vendor/CryptoJS/build/rollups/pbkdf2.js',
+    'vendor/CryptoJS/build/rollups/sha256.js',
+    'node_modules/bitcore/browser/bundle.js',
+    'vendor/bootswatch/lumen/bootstrap.min.css'
+];
 
+module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         usebanner: {
             options: {
                 banner: '/*!\n * <%= pkg.title || pkg.name %>\n * <%= pkg.description%>\n * Version <%= pkg.version%>\n * Compiled <%= grunt.template.today("dddd, mmmm dS, yyyy, h:MM:ss TT") %>\n */\n',
             },
-            scripts: {
-                src: '{lib/app,dist}/**/*.js'
+            walletscripts: {
+                src: 'dist/scripts/wallet{.,.min.}js'
             },
-            stylesheets: {
-                src: '{lib/app,dist}/**/*.css'
+            walletstylesheets: {
+                src: 'dist/stylesheets/wallet{.,.min.}css'
+            },
+            watchdogscripts: {
+                src: 'dist/scripts/watchdog{.,.min.}js'
+            },
+            watchdogstylesheets: {
+                src: 'dist/stylesheets/watchdog{.,.min.}css'
             }
         },
         clean: {
-            dist: 'dist',
-            lib: 'lib',
-            libscripts: 'lib/app/scripts',
-            libstylesheets: 'lib/app/stylesheets',
-            postcompile: {
-                src: 'dist/**/*',
-                filter: function (path) {
-                    return grunt.file.isDir(path) && grunt.file.expand({cwd: path}, '**/*').length === 0;
+            walletscripts: 'dist/scripts/wallet{.,.min.}js',
+            walletstylesheets: 'dist/scripts/wallet{.,.min.}css',
+            watchdogscripts: 'dist/scripts/watchdog{.,.min.}js',
+            watchdogstylesheets: 'dist/scripts/watchdog{.,.min.}css',
+            all: 'dist'
+        },
+        compass: {
+            options: {
+                config: '.compassrc'
+            },
+            wallet: {
+                options: {
+                    specify: [
+                        'src/stylesheets/reset.scss',
+                        'src/stylesheets/wallet.scss'
+                    ]
+                }
+            },
+            watchdog: {
+                options: {
+                    specify: [
+                        'src/stylesheets/reset.scss',
+                        'src/stylesheets/watchdog.scss'
+                    ]
+                }
+            }
+        },
+        concat: {
+            options: {
+                stripBanners: true
+            },
+            wallet: {
+                src: [].concat('.tmp/ember-templates.js', walletScriptFiles),
+                dest: 'dist/scripts/wallet.js'
+            },
+            watchdog: {
+                src: [].concat('.tmp/ember-templates.js', watchdogScriptFiles),
+                dest: 'dist/scripts/watchdog.js'
+            }
+        },
+        cssmin: {
+            reset: {
+                files: {
+                    'dist/stylesheets/reset.min.css': 'dist/stylesheets/reset.css'
+                }
+            },
+            wallet: {
+                files: {
+                    'dist/stylesheets/wallet.min.css': 'dist/stylesheets/wallet.css'
+                }
+            },
+            watchdog: {
+                files: {
+                    'dist/stylesheets/watchdog.min.css': 'dist/stylesheets/watchdog.css'
                 }
             }
         },
@@ -58,19 +108,54 @@ module.exports = function (grunt) {
             options: {
                 jshintrc: true
             },
-            node: ['bower.json', 'Gruntfile.js', 'package.json'],
+            node: ['bower.json', 'Gruntfile.js', 'package.json', 'tasks/**/*.{js,node}'],
             src: 'src/scripts/**/*.js'
         },
-        concat: {
+        uglify: {
             options: {
-                stripBanners: true,
+                sourceMap: true
             },
-            src: {
-                dest: 'lib/app/scripts/application.js',
-                src: sourceFiles
+            wallet: {
+                files: {
+                    'dist/scripts/wallet.min.js': 'dist/scripts/wallet.js'
+                }
+            },
+            watchdog: {
+                files: {
+                    'dist/scripts/watchdog.min.js': 'dist/scripts/watchdog.js'
+                }
             }
         },
-        ember_handlebars: { //jshint ignore:line
+        watch: {
+            options: {
+                livereload: true
+            },
+            node: {
+                files: ['package.json', 'Gruntfile.js'],
+                tasks: 'default'
+            },
+            scripts: {
+                files: ['src/**/*.js', '**/.jshintrc'],
+                tasks: 'scripts'
+            },
+            stylesheets: {
+                files: ['src/**/*.scss', '.compassrc', '.scsslintrc'],
+                tasks: 'stylesheets'
+            },
+            template: {
+                files: 'src/**/*.hbs',
+                takss: ['ember_handlebars', 'concat', 'uglify', 'usebanner']
+            },
+            vendor: {
+                files: vendorFiles,
+                tasks: 'htmlcompiler'
+            },
+            readme: {
+                files: ['.verbrc', 'docs/**/*.md'],
+                tasks: 'verb'
+            }
+        },
+        ember_handlebars: { // jshint ignore:line
             options: {
                 namespace: 'Ember.TEMPLATES',
                 processName: function (filename) {
@@ -79,39 +164,39 @@ module.exports = function (grunt) {
             },
             src: {
                 files: {
-                    'lib/app/scripts/ember-templates.js': 'src/templates/**/*.hbs'
+                    '.tmp/ember-templates.js': 'src/templates/**/*.hbs'
                 }
             }
         },
-        uglify: {
-            options: {
-                sourceMap: true
-            },
-            lib: {
-                expand: true,
-                cwd: 'lib/app/scripts/',
-                src: ['**/*.js', '!**/*.min.js'],
-                dest: 'lib/app/scripts/',
-                ext: '.min.js'
-            }
-        },
-        cssmin: {
-            lib: {
-                expand: true,
-                cwd: 'lib/app/stylesheets/',
-                src: '**/*.css',
-                dest: 'lib/app/stylesheets/',
-                ext: '.min.css'
-            }
-        },
-        compass: {
-            src: {
+        htmlcompiler: {
+            'dist/wallet.html': {
                 options: {
-                    config: '.compassrc',
-                    specify: [
-                        'src/stylesheets/reset.scss',
-                        'src/stylesheets/style.scss'
-                    ]
+                    vendors: [].concat('dist/stylesheets/reset.min.css', vendorFiles),
+                    scripts: ['dist/scripts/wallet.min.js', 'http://localhost:35729/livereload.js'],
+                    stylesheets: 'dist/stylesheets/wallet.min.css',
+                    title: 'Wallet | <%= pkg.title || pkg.name %>',
+                    meta: [
+                        {
+                            name: 'viewport',
+                            content: 'width=device-width, user-scalable=no'
+                        }
+                    ],
+                    body: '<div id="ember-app"></div>'
+                }
+            },
+            'dist/watchdog.html': {
+                options: {
+                    vendors: [].concat('dist/stylesheets/reset.min.css', vendorFiles),
+                    scripts: ['dist/scripts/watchdog.min.js', 'http://localhost:35729/livereload.js'],
+                    stylesheets: 'dist/stylesheets/watchdog.min.css',
+                    title: 'Watchdog | <%= pkg.title || pkg.name %>',
+                    meta: [
+                        {
+                            name: 'viewport',
+                            content: 'width=device-width, user-scalable=no'
+                        }
+                    ],
+                    body: '<div id="ember-app"></div>'
                 }
             }
         },
@@ -120,106 +205,6 @@ module.exports = function (grunt) {
                 config: '.scsslintrc'
             },
             src: 'src/**/*.scss'
-        },
-        copy: {
-            assets: {
-                expand: true,
-                cwd: 'src/',
-                src: ['**/*', '!**/*.{js,scss,hbs}'],
-                dest: 'dist/',
-                filter: function (path) {
-                    return !grunt.file.isDir(path) || grunt.file.expand({cwd: path}, ['**/*', '!**/*.{js,scss,hbs}']).length;
-                }
-            },
-            scripts: {
-                files: [{
-                    expand: true,
-                    cwd: 'lib/app/scripts/',
-                    src: '**/*.{js,map}',
-                    dest: 'dist/scripts/'
-                }]
-            },
-            stylesheets: {
-                expand: true,
-                cwd: 'lib/app/stylesheets/',
-                src: '**/*.css',
-                dest: 'dist/stylesheets/'
-            }
-        },
-        watch: {
-            options: {
-                atBegin: true,
-                livereload: true
-            },
-            node: {
-                files: ['package.json', 'Gruntfile.js', '.csslintrc', '.jshintrc'],
-                tasks: ['default']
-            },
-            scripts: {
-                files: ['**/.jshintrc', 'src/scripts/**/*.js'],
-                tasks: ['scripts', 'htmlcompiler']
-            },
-            stylesheets: {
-                files: ['.compassrc', '.scsslintrc', 'src/stylesheets/**/*.scss'],
-                tasks: ['stylesheets', 'htmlcompiler']
-            },
-            templates: {
-                files: 'src/templates/**/*.hbs',
-                tasks: ['ember_handlebars', 'copy:scripts']
-            },
-            assets: {
-                files: ['src/**.*', '!src/**/*.{js,css,hbs}'],
-                tasks: 'copy:assets'
-            },
-            vendor: {
-                files: [].concat(vendorScriptFiles, vendorStylesheetFiles),
-                tasks: 'htmlcompiler'
-            },
-            readme: {
-                files: ['.verbrc', 'docs/**/*.md'],
-                tasks: 'verb'
-            }
-        },
-        htmlcompiler: {
-            'dist/index.html': {
-                options: {
-                    vendors: vendorScriptFiles,
-                    scripts: [].concat(
-                        'lib/app/scripts/ember-templates.js',
-                        sourceFiles,
-                        'http://localhost:35729/livereload.js'
-                    ),
-                    stylesheets: [].concat('dist/stylesheets/reset.css', vendorStylesheetFiles, ['dist/**/*.css', '!dist/**/*.min.css']),
-                    title: '<%= pkg.title || pkg.name %>',
-                    meta: [
-                        {
-                            name: 'viewport',
-                            content: 'width=device-width, user-scalable=no'
-                        }
-                    ],
-                    body: '<div id="ember-app"></div>'
-                }
-            },
-            'dist/index.dev.html': {
-                options: {
-                    vendors: vendorScriptFiles,
-                    scripts: [
-                        'dist/scripts/ember-templates.js',
-                        'dist/**/*.js',
-                        '!dist/**/*.min.js',
-                        'http://localhost:35729/livereload.js'
-                    ],
-                    stylesheets: [].concat('dist/stylesheets/reset.css', vendorStylesheetFiles, ['dist/**/*.css', '!dist/**/*.min.css']),
-                    title: '<%= pkg.title || pkg.name %>',
-                    meta: [
-                        {
-                            name: 'viewport',
-                            content: 'width=device-width, user-scalable=no'
-                        }
-                    ],
-                    body: '<div id="ember-app"></div>'
-                }
-            }
         },
         verb: {
             readme: {
@@ -234,7 +219,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-compass');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -242,10 +226,30 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-ember-handlebars');
     grunt.loadNpmTasks('grunt-html-compiler');
     grunt.loadNpmTasks('grunt-scss-lint');
+    
     grunt.loadNpmTasks('grunt-verb');
+    
+    grunt.registerTask('default', ['jshint:node', 'wallet', 'watchdog', 'verb:readme']);
+    
+    grunt.registerTask('wallet', ['walletscripts', 'walletstylesheets', 'walletassets']);
+    
+    grunt.registerTask('watchdog', ['watchdogscripts', 'watchdogstylesheets', 'watchdogassets']);
 
-    grunt.registerTask('default', ['verb:readme', 'jshint:node', 'clean:dist', 'clean:lib', 'scripts', 'stylesheets', 'copy', 'htmlcompiler', 'clean:postcompile']);
-    grunt.registerTask('stylesheets', ['scsslint', 'clean:libstylesheets', 'compass', 'cssmin', 'copy:stylesheets', 'usebanner:stylesheets']);
-    grunt.registerTask('scripts', ['jshint:src', 'clean:libscripts', 'concat:src', 'ember_handlebars', 'uglify', 'copy:scripts', 'usebanner:scripts']);
-    grunt.registerTask('dev', ['compass', 'cssmin', 'concat:src', 'ember_handlebars', 'uglify', 'copy', 'htmlcompiler:dist/index.html']);
+    grunt.registerTask('scripts', ['walletscripts', 'watchdogscripts']);
+
+    grunt.registerTask('stylesheets', ['walletstylesheets', 'watchdogstylesheets']);
+    
+    grunt.registerTask('assets', ['walletassets', 'watchdogassets']);
+    
+    grunt.registerTask('walletstylesheets', ['scsslint:src', 'clean:walletstylesheets', 'compass:wallet', 'cssmin:reset', 'cssmin:wallet', 'usebanner:walletstylesheets']);
+    
+    grunt.registerTask('walletscripts', ['jshint:src', 'clean:walletscripts', 'ember_handlebars:src', 'concat:wallet', 'uglify:wallet', 'usebanner:walletscripts']);
+    
+    grunt.registerTask('watchdogstylesheets', ['scsslint:src', 'clean:watchdogstylesheets', 'compass:watchdog', 'cssmin:reset', 'cssmin:watchdog', 'usebanner:watchdogstylesheets']);
+    
+    grunt.registerTask('watchdogscripts', ['jshint:src', 'clean:watchdogscripts', 'ember_handlebars:src', 'concat:watchdog', 'uglify:watchdog', 'usebanner:watchdogscripts']);
+    
+    grunt.registerTask('walletassets', ['htmlcompiler:dist/wallet.html']);
+
+    grunt.registerTask('watchdogassets', ['htmlcompiler:dist/watchdog.html']);
 };

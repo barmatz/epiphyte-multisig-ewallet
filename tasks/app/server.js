@@ -3,8 +3,8 @@
 var express = require('express'),
 morgan = require('morgan'),
 logger = require('./serverlogger'),
-app = express(),
-port = process.env.PORT || 3002;
+port = process.env.PORT || 3000,
+app = express();
 
 app.use(morgan({
     stream: {
@@ -19,13 +19,15 @@ app.use('/vendor', express.static(__dirname + '/../../vendor'));
 
 app.use('/images', express.static(__dirname + '/../../images'));
 
-app.use('/lib', express.static(__dirname + '/../../lib'));
-
 app.use('/src', express.static(__dirname + '/../../src'));
 
 app.use('/node_modules', express.static(__dirname + '/../../node_modules'));
 
 app.use(express.static(__dirname + '/../../dist'));
+
+app.get('/', function (req, res) {
+    res.redirect('/wallet.html');
+});
 
 app.listen(port, function () {
     var str = 'Listening to http://localhost:' + port + '...';

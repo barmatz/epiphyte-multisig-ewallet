@@ -5,6 +5,16 @@ path = 'logs',
 filename = path + '/server.log',
 cache = '';
 
+function createDirectory(callback) {
+    fs.mkdir(path, function (err) {
+        if (err) {
+            throw err;
+        }
+
+        callback();
+    });
+}
+
 function createFile() {
     fs.exists(path, function (exists) {
         if (exists) {
@@ -17,22 +27,12 @@ function createFile() {
                     fs.writeFile(filename, cache);
                     cache = '';
                 } else {
-                    createDirectory();
+                    createDirectory(createFile);
                 }
             });
         } else {
-            createDirectory();
+            createDirectory(createFile);
         }
-    });
-}
-
-function createDirectory() {
-    fs.mkdir(path, function (err) {
-        if (err) {
-            throw err;
-        }
-
-        createFile();
     });
 }
 

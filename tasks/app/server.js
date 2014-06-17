@@ -2,7 +2,7 @@
 
 var express = require('express'),
 morgan = require('morgan'),
-logger = require('./serverlogger'),
+logger = require('./serverLogger'),
 port = process.env.PORT || 3000,
 app = express();
 

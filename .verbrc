@@ -1,3 +1,11 @@
 # {%= name %}
 
 > {%= description %}
+
+{%= toc() %}
+
+## Install
+{%= docs('install') %}
+
+## Build
+{%= docs('build') %}

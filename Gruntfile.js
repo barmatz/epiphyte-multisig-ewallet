@@ -223,16 +223,9 @@ module.exports = function (grunt) {
         },
         verb: {
             readme: {
-                files: [
-                    {'README.md': '.verbrc'},
-                    {
-                        expand: true,
-                        cwd: 'docs',
-                        src: ['**/*.tmpl.md'],
-                        dest: '.',
-                        ext: '.md'
-                    }
-                ]
+                files: {
+                    'README.md': '.verbrc'
+                }
             }
         }
     });
@@ -251,7 +244,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-scss-lint');
     grunt.loadNpmTasks('grunt-verb');
 
-    grunt.registerTask('default', ['verb', 'jshint:node', 'clean:dist', 'clean:lib', 'scripts', 'stylesheets', 'copy', 'htmlcompiler', 'clean:postcompile']);
+    grunt.registerTask('default', ['verb:readme', 'jshint:node', 'clean:dist', 'clean:lib', 'scripts', 'stylesheets', 'copy', 'htmlcompiler', 'clean:postcompile']);
     grunt.registerTask('stylesheets', ['scsslint', 'clean:libstylesheets', 'compass', 'cssmin', 'copy:stylesheets', 'usebanner:stylesheets']);
     grunt.registerTask('scripts', ['jshint:src', 'clean:libscripts', 'concat:src', 'ember_handlebars', 'uglify', 'copy:scripts', 'usebanner:scripts']);
     grunt.registerTask('dev', ['compass', 'cssmin', 'concat:src', 'ember_handlebars', 'uglify', 'copy', 'htmlcompiler:dist/index.html']);

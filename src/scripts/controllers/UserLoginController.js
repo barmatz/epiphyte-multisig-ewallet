@@ -20,7 +20,7 @@
         balance: 10000,
         loading: false,
         error: null,
-        id: Ember.computed.alias('controllers.application.totalWallets'),
+        id: null,
         password: null,
         actions: {
             submit: function () {

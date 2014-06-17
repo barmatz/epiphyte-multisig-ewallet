@@ -1,13 +1,19 @@
 'use strict';
 
 var express = require('express'),
+morgan = require('morgan'),
+logger = require('./serverlogger'),
 app = express(),
 port = process.env.PORT || 3002;
 
-app.use(function (req, res, next) {
-    console.log('%s %s', req.method, req.url);
-    next();
-});
+app.use(morgan({
+    stream: {
+        write: function (str) {
+            logger.toFile(str, false);
+            logger.toConsole(str);
+        }
+    }
+}));
 
 app.use('/vendor', express.static(__dirname + '/../../vendor'));
 
@@ -26,5 +32,8 @@ app.use('/', express.static(__dirname + '/../..'));
 app.use(express.static(__dirname + '/../../dist'));
 
 app.listen(port, function () {
-    console.log('Listening to http://localhost:%s...', port);
+    var str = 'Listening to http://localhost:' + port + '...';
+
+    logger.toFile(str);
+    logger.toConsole(str);
 });

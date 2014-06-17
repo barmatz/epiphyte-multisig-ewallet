@@ -4,7 +4,7 @@ To build the project run:
 grunt
 ```
 
-A server is available at `http://localhost:3002` by running
+A server is available at `http://localhost:3000` by running
 
 ```bash
 npm start

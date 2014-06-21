@@ -9,7 +9,7 @@
   ],
   "dependencies": {
     "ember": "~1.5.1",
-    "bootswatch": "~3.1.1+1",
+    "bootswatch": "~3.1.1",
     "bootstrap": "~3.1.1"
   }
 }
